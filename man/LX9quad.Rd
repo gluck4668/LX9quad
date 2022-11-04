@@ -41,12 +41,15 @@ group2="Model"
 
 LX9quad_p1(gene_file,meta_file,group1,group2)
 
+
 # The nine-quadrantal diagram were obtained by adjusting the x and y axis based on the orginal graphic above.
 
-result <- LX9quad_p2(xmin=-4,xmax=2.5,ymin=-8,ymax=8)
-result
+xmin=-4
+xmax=2.5
+ymin=-8
+ymax=8
 
-ggsave("The Nine Quadrantal Diagram.tiff", result,width=1200, height =1000, dpi=150,units = "px")
+LX9quad_p2(xmin,xmax,ymin,ymax)
 
 }
 
