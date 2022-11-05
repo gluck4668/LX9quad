@@ -67,64 +67,64 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
 
   gene_all <- read.xlsx(gene_file)
   colnames(gene_all)[1]="gene_id"
-  
+
   meta_all <- read.xlsx(meta_file)
   colnames(meta_all)[1]="meta_id"
-  
-  
+
+
   group_gene <- colnames(gene_all)
   group_gene <- gsub("\\d+$","", group_gene)[c(3:ncol(gene_all))] %>% data.frame()
-  
-  group_gene <- dplyr::distinct(group_gene) %>% t() 
-  
+
+  group_gene <- dplyr::distinct(group_gene) %>% t()
+
   group_g <- paste(group_gene,collapse = ",")
-  
+
   print("-----------------------------------------------------------")
-  
+
   group_g <- paste("The groups in the gene data file are",group_g)
   print(group_g)
-  
-  
+
+
   group_meta <- colnames(meta_all)
   group_meta <- gsub("\\d+$","", group_meta)[c(4:ncol(meta_all))] %>% data.frame()
-  
-  group_meta <- dplyr::distinct(group_meta) %>% t() 
-  
+
+  group_meta <- dplyr::distinct(group_meta) %>% t()
+
   group_m <- paste(group_meta,collapse = ",")
-  
-  
+
+
   group_m <- paste("The groups in the metabolite data file are",group_m)
   print(group_m)
   print("-----------------------------------------------------------")
-  
+
   if(tolower(group1) %in% tolower(group_gene)==FALSE)
   {
   group_j <- paste(group1,"that you named is not found in the gene data file. Please check it")
   print(group_j)
   }
-    
-    
+
+
   if(tolower(group2) %in% tolower(group_gene)==FALSE)
   {group_j <- paste(group2,"that you named is not found in the gene data file. Please check it")
   print(group_j)
   }
-  
-  
+
+
   if(tolower(group1) %in% tolower(group_meta)==FALSE)
   {group_j <- paste(group1,"that you named is not found in the metabolite data file. Please check it")
   print(group_j)
-   } 
-  
-  
+   }
+
+
   if(tolower(group2) %in% tolower(group_meta)==FALSE)
   {group_j <- paste(group2,"that you named is not found in the metabolite data file. Please check it")
   print(group_j)
-  } 
-  
-  
-  
+  }
+
+
+
   #-------------------------------------
-  
+
   gene_df <- data.frame(distinct(gene_all, gene_id, .keep_all = TRUE))
 
   gene_data <- gene_df[,-2]
@@ -134,9 +134,9 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
   gene_n <- ncol(genes)
 
   genes_FC <- gene_df[,1:2]
-  
+
   #-----------------------------------
-  
+
   meta_df <- data.frame(distinct(meta_all, meta_id, .keep_all = TRUE))
 
   meta_data <- meta_df[,-2:-3]
@@ -232,28 +232,28 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
                          abs(data$Log2FC_genes) > 1 & abs(data$Log2FC_meta) < 1 ~ "part46",
                          abs(data$Log2FC_genes) < 1 & abs(data$Log2FC_meta) < 1 ~ "part5")
 
-  
+
   sig_cor <- dplyr::filter(data,part=="part1379")
-  
+
   sig_cor$correlation <- case_when(sig_cor$Log2FC_genes >= 1 & sig_cor$Log2FC_meta >= 1 ~ "positive",
-                                  sig_cor$Log2FC_genes <= 1 & sig_cor$Log2FC_meta <= 1 ~ "positive",      
+                                  sig_cor$Log2FC_genes <= 1 & sig_cor$Log2FC_meta <= 1 ~ "positive",
                                   sig_cor$Log2FC_genes >= 1 & sig_cor$Log2FC_meta <= 1 ~ "negative",
                                   sig_cor$Log2FC_genes <= 1 & sig_cor$Log2FC_meta >= 1 ~ "negative")
-  
-  postive_cor <- dplyr::filter(sig_cor,correlation=="positive") 
+
+  postive_cor <- dplyr::filter(sig_cor,correlation=="positive")
   postive_cor <- postive_cor[,-7]
-  
+
   negative_cor <- dplyr::filter(sig_cor,correlation=="negative")
   negative_cor <-negative_cor[,-7]
-  
+
   if(dir.exists("analysis result")==FALSE)
       dir.create("analysis result")
-  
-  
+
+
   write.xlsx(data,"analysis result/data_cor.xlsx")
   write.xlsx(postive_cor,"analysis result/postive_cor.xlsx")
   write.xlsx(negative_cor,"analysis result/negative_cor.xlsx")
-  
+
 
   p0 <-ggplot(data,aes(Log2FC_genes,Log2FC_metabolites,color=part))
 
@@ -284,7 +284,7 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
 LX9quad_p2 <- function(xmin,xmax,ymin,ymax){
 
     data <- read.xlsx("analysis result/data_cor.xlsx")
-    
+
     p0 <-ggplot(data,aes(Log2FC_genes,Log2FC_metabolites,color=part))
 
     p1 <- p0+geom_point(size = 2)+guides(color="none")
@@ -363,7 +363,9 @@ LX9quad_p2 <- function(xmin,xmax,ymin,ymax){
 
 
   ggsave("analysis result/The Nine Quadrantal Diagram.tiff", p5,width=1200, height =1000, dpi=150,units = "px")
-  
+
+  print("Please see the results in the folder of <analysis result>")
+
   p5
 
 }
