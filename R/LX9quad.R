@@ -4,7 +4,7 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
 
    R_packs_install <- function(){
 
-     R_packs <- c("devtools", "psych","pheatmap","ggplot2","openxlsx","ggrepel","dplyr","magrittr")
+     R_packs <- c("devtools", "psych","pheatmap","ggplot2","openxlsx","ggrepel","dplyr","magrittr","conflicted")
 
     list_installed <- installed.packages()
 
@@ -46,13 +46,39 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
   #---------------------------------
 
   packages <- c("devtools", "psych","pheatmap","ggplot2","openxlsx","ggrepel",
-                "dplyr","magrittr","WGCNA","GO.db")
+                "dplyr","magrittr","conflicted","WGCNA","GO.db")
 
   for(i in packages){
     library(i, character.only = T)
   }
 
   rm(i)
+
+  conflict_prefer("%+%", "psych")
+  conflict_prefer("distance", "psych")
+
+  conflict_prefer("filter", "dplyr")
+  conflict_prefer("lag", "dplyr")
+  conflict_prefer("arrange", "dplyr")
+  conflict_prefer("select", "dplyr")
+  conflict_prefer("summarise", "dplyr")
+  conflict_prefer("summarize", "dplyr")
+  conflict_prefer("rename", "dplyr")
+  conflict_prefer("mutate", "dplyr")
+  conflict_prefer("count", "dplyr")
+  conflict_prefer("failwith", "dplyr")
+  conflict_prefer("id", "dplyr")
+  conflict_prefer("combine", "dplyr")
+  conflict_prefer("desc", "dplyr")
+  conflict_prefer("collapse", "dplyr")
+  conflict_prefer("slice", "dplyr")
+
+  conflict_prefer("Position", "ggplot2")
+
+  conflict_prefer("blockSize", "WGCNA")
+  conflict_prefer("cor", "WGCNA")
+
+  conflict_scout()
 
  #---------------------------------
 
@@ -265,17 +291,17 @@ LX9quad_p1 <- function(gene_file,meta_file,group1,group2){
   titile_text <- paste('Nine Quadrantal Diagram',"(",group1,"VS",group2,")")
 
   p3 <- p2+geom_hline(yintercept = c(-1,1),
-                      size = 0.6,
+                      linewidth = 0.6,
                       color = "gray30",
                       lty = "dashed")+
     geom_vline(xintercept = c(-1,1),
-               size = 0.6,
+               linewidth = 0.6,
                color = "gray30",
                lty = "dashed")+
     labs(title =titile_text) +
     theme(plot.title = element_text(hjust = 0.5))
 
- p3
+  p3
 
   }
 
@@ -296,11 +322,11 @@ LX9quad_p2 <- function(xmin,xmax,ymin,ymax){
     titile_text <- paste('Nine Quadrantal Diagram',"(",group1,"VS",group2,")")
 
     p3 <- p2+geom_hline(yintercept = c(-1,1),
-                        size = 0.6,
+                        linewidth = 0.6,
                         color = "gray30",
                         lty = "dashed")+
       geom_vline(xintercept = c(-1,1),
-                 size = 0.6,
+                 linewidth = 0.6,
                  color = "gray30",
                  lty = "dashed")+
       labs(title =titile_text) +

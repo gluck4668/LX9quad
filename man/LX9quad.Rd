@@ -55,3 +55,8 @@ LX9quad_p2(xmin,xmax,ymin,ymax)
 
 
 
+#-------check the conflict packages-----------------
+conflict_scout()
+conflict_prefer("cor", "WGCNA")
+
+
